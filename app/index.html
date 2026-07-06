@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Resume Builder — clean PDF resumes in 2 minutes</title>
+<meta name="description" content="Build a professional resume free. No sign-up, no watermark, download PDF. 4 templates, autosave, 100% private.">
+<style>
+  :root { --accent:#2563eb; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+         color:var(--ink); background:#f3f4f6; }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:14px 20px;
+           display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  header h1 { font-size:18px; margin:0; }
+  header .actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  button { font:inherit; border:1px solid var(--line); background:#fff; padding:8px 14px;
+           border-radius:8px; cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  input[type=color]{ width:38px; height:38px; padding:2px; border-radius:8px; border:1px solid var(--line); cursor:pointer; }
+  .wrap { display:grid; grid-template-columns: 380px 1fr; gap:20px; padding:20px;
+          max-width:1200px; margin:0 auto; align-items:start; }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .panel h2 { font-size:13px; text-transform:uppercase; letter-spacing:.04em;
+              color:var(--muted); margin:0 0 10px; }
+  label { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  input, textarea, select { width:100%; padding:8px 10px; border:1px solid var(--line);
+           border-radius:8px; font:inherit; }
+  textarea { min-height:64px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .item { border:1px solid var(--line); border-radius:8px; padding:10px; margin-top:10px; }
+  .item .del { float:right; font-size:12px; color:#b91c1c; border-color:#fecaca; padding:4px 8px; }
+  .add { width:100%; margin-top:10px; border-style:dashed; }
+  #preview { background:#fff; border:1px solid var(--line); border-radius:12px; padding:0; overflow:hidden; }
+  .page { width:100%; max-width:800px; margin:0 auto; padding:40px 48px; background:#fff; min-height:1000px; }
+
+  /* ---- Classic ---- */
+  .theme-classic .name { font-size:30px; font-weight:700; margin:0; }
+  .theme-classic .role { color:var(--muted); margin:2px 0 6px; }
+  .theme-classic .contact { font-size:13px; color:var(--muted); }
+  .theme-classic h3 { border-bottom:2px solid var(--ink); padding-bottom:4px;
+             text-transform:uppercase; font-size:14px; letter-spacing:.06em; margin:22px 0 8px; }
+  /* ---- Modern ---- */
+  .theme-modern .header-bar { background:var(--accent); color:#fff; margin:-40px -48px 20px; padding:32px 48px; }
+  .theme-modern .name { font-size:30px; font-weight:700; margin:0; }
+  .theme-modern .role { opacity:.9; margin:2px 0 6px; }
+  .theme-modern .contact { font-size:13px; opacity:.9; }
+  .theme-modern h3 { color:var(--accent); font-size:14px; letter-spacing:.06em;
+             text-transform:uppercase; margin:22px 0 8px; }
+  /* ---- Minimal ---- */
+  .theme-minimal .name { font-size:26px; font-weight:600; margin:0; letter-spacing:.02em; }
+  .theme-minimal .role { color:var(--ink); margin:2px 0 6px; font-weight:500; }
+  .theme-minimal .contact { font-size:12.5px; color:var(--muted); }
+  .theme-minimal h3 { font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+             color:var(--muted); margin:22px 0 6px; }
+  /* ---- Elegant ---- */
+  .theme-elegant{ font-family: Georgia, "Times New Roman", serif; }
+  .theme-elegant .name { font-size:32px; font-weight:700; margin:0; text-align:center; }
+  .theme-elegant .role { text-align:center; color:var(--accent); margin:2px 0 6px; font-style:italic; }
+  .theme-elegant .contact { text-align:center; font-size:13px; color:var(--muted); }
+  .theme-elegant h3 { text-align:center; color:var(--accent); font-size:15px; margin:22px 0 8px;
+             border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0; }
+
+  .entry { margin-bottom:12px; }
+  .entry .top { display:flex; justify-content:space-between; gap:10px; }
+  .entry .t { font-weight:600; }
+  .entry .when { color:var(--muted); font-size:13px; white-space:nowrap; }
+  .entry .sub { color:var(--muted); font-size:13px; }
+  .entry ul { margin:6px 0 0; padding-left:18px; }
+  .entry li { margin:2px 0; }
+  .skills { display:flex; flex-wrap:wrap; gap:6px; }
+  .skills span { background:color-mix(in srgb, var(--accent) 12%, #fff); color:var(--accent);
+             padding:3px 10px; border-radius:999px; font-size:12px; }
+  .hint { font-size:12px; color:var(--muted); margin-top:8px; }
+  @media print {
+    header, .panel, .hint { display:none !important; }
+    body { background:#fff; }
+    .wrap { display:block; padding:0; max-width:none; }
+    #preview { border:0; border-radius:0; }
+    .page { max-width:none; padding:0 40px; }
+  }
+  @media (max-width:900px){ .wrap{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>📄 Free Resume Builder</h1>
+  <div class="actions">
+    <select id="theme" title="Template">
+      <option value="theme-classic">Classic</option>
+      <option value="theme-modern">Modern</option>
+      <option value="theme-minimal">Minimal</option>
+      <option value="theme-elegant">Elegant</option>
+    </select>
+    <input type="color" id="accent" value="#2563eb" title="Accent colour">
+    <button id="loadSample">Load sample</button>
+    <button id="reset">Clear</button>
+    <button id="premium" style="display:none">⭐ Premium templates</button>
+    <button class="primary" id="download">Download PDF</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div>
+    <div class="panel">
+      <h2>Basics</h2>
+      <label>Full name</label><input id="f_name" placeholder="Jane Doe">
+      <label>Headline / target role</label><input id="f_role" placeholder="Frontend Developer">
+      <div class="row">
+        <div><label>Email</label><input id="f_email" placeholder="jane@email.com"></div>
+        <div><label>Phone</label><input id="f_phone" placeholder="+91 90000 00000"></div>
+      </div>
+      <div class="row">
+        <div><label>Location</label><input id="f_loc" placeholder="City, India"></div>
+        <div><label>Website / LinkedIn</label><input id="f_web" placeholder="linkedin.com/in/…"></div>
+      </div>
+      <label>Summary</label>
+      <textarea id="f_summary" placeholder="One or two lines about you."></textarea>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Experience</h2>
+      <div id="expList"></div>
+      <button class="add" id="addExp">+ Add experience</button>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Education</h2>
+      <div id="eduList"></div>
+      <button class="add" id="addEdu">+ Add education</button>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Skills</h2>
+      <label>Comma-separated</label>
+      <input id="f_skills" placeholder="JavaScript, React, Figma, SQL">
+    </div>
+
+    <div class="panel" id="affiliateCard" style="margin-top:16px; display:none">
+      <h2>Next steps for your job search</h2>
+      <div id="affiliateLinks"></div>
+    </div>
+    <p class="hint">Everything autosaves in your browser. Nothing is uploaded anywhere.</p>
+  </div>
+
+  <div id="preview">
+    <div class="page theme-classic" id="page"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  MONETIZATION CONFIG — paste your links here after setup.
+//  Leave a value as '' to hide that piece. See INDIA-SETUP.md.
+// ============================================================
+const CONFIG = {
+  premiumUrl: '',
+  affiliate: [
+    // { label: 'Browse remote jobs', url: 'https://your-affiliate-link' },
+  ],
+};
+
+const $ = id => document.getElementById(id);
+const state = {
+  name:'', role:'', email:'', phone:'', loc:'', web:'', summary:'', skills:'',
+  theme:'theme-classic', accent:'#2563eb', exp:[], edu:[]
+};
+
+const KEY = 'resume-builder-v2';
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){ try { Object.assign(state, JSON.parse(localStorage.getItem(KEY)) || {}); } catch(e){} }
+
+function makeEntryEditor(container, arr, fields, onchange){
+  container.innerHTML = '';
+  arr.forEach((row, i) => {
+    const div = document.createElement('div'); div.className = 'item';
+    const del = document.createElement('button');
+    del.className = 'del'; del.textContent = 'Remove';
+    del.onclick = () => { arr.splice(i,1); onchange(); };
+    div.appendChild(del);
+    fields.forEach(f => {
+      const l = document.createElement('label'); l.textContent = f.label; div.appendChild(l);
+      const el = document.createElement(f.area ? 'textarea' : 'input');
+      el.value = row[f.k] || ''; el.placeholder = f.ph || '';
+      el.oninput = () => { row[f.k] = el.value; save(); render(); };
+      div.appendChild(el);
+    });
+    container.appendChild(div);
+  });
+}
+const expFields = [
+  {k:'title', label:'Job title', ph:'Frontend Developer'},
+  {k:'org', label:'Company', ph:'Acme Inc.'},
+  {k:'when', label:'Dates', ph:'2022 — Present'},
+  {k:'bullets', label:'Achievements (one per line)', area:true, ph:'Built X that improved Y by Z%'},
+];
+const eduFields = [
+  {k:'title', label:'Degree / program', ph:'B.Sc. Computer Science'},
+  {k:'org', label:'School', ph:'State University'},
+  {k:'when', label:'Dates', ph:'2018 — 2022'},
+];
+function renderEditors(){
+  makeEntryEditor($('expList'), state.exp, expFields, () => { save(); renderEditors(); render(); });
+  makeEntryEditor($('eduList'), state.edu, eduFields, () => { save(); renderEditors(); render(); });
+}
+
+function esc(s){ return (s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function entryHTML(e, withBullets){
+  const bullets = withBullets && e.bullets
+    ? '<ul>' + e.bullets.split('\n').filter(Boolean).map(b => '<li>'+esc(b)+'</li>').join('') + '</ul>' : '';
+  return `<div class="entry"><div class="top">
+      <span class="t">${esc(e.title)||'&nbsp;'}</span>
+      <span class="when">${esc(e.when)}</span></div>
+      <div class="sub">${esc(e.org)}</div>${bullets}</div>`;
+}
+function render(){
+  const p = $('page');
+  p.className = 'page ' + state.theme;
+  document.documentElement.style.setProperty('--accent', state.accent || '#2563eb');
+  const contact = [state.email, state.phone, state.loc, state.web].filter(Boolean).join('  •  ');
+  const head = `
+    <p class="name">${esc(state.name)||'Your Name'}</p>
+    <p class="role">${esc(state.role)}</p>
+    <p class="contact">${esc(contact)}</p>`;
+  const header = state.theme === 'theme-modern' ? `<div class="header-bar">${head}</div>` : head;
+  const section = (title, body) => body ? `<h3>${title}</h3>${body}` : '';
+  const skills = state.skills
+    ? '<div class="skills">' + state.skills.split(',').map(s=>s.trim()).filter(Boolean)
+        .map(s => '<span>'+esc(s)+'</span>').join('') + '</div>' : '';
+  p.innerHTML = header
+    + section('Summary', state.summary ? '<p>'+esc(state.summary)+'</p>' : '')
+    + section('Experience', state.exp.map(e => entryHTML(e, true)).join(''))
+    + section('Education', state.edu.map(e => entryHTML(e, false)).join(''))
+    + section('Skills', skills);
+}
+
+const basicMap = { f_name:'name', f_role:'role', f_email:'email', f_phone:'phone',
+  f_loc:'loc', f_web:'web', f_summary:'summary', f_skills:'skills' };
+function bindBasics(){
+  for (const [id, k] of Object.entries(basicMap)){
+    $(id).value = state[k] || '';
+    $(id).oninput = e => { state[k] = e.target.value; save(); render(); };
+  }
+  $('theme').value = state.theme;
+  $('theme').onchange = e => { state.theme = e.target.value; save(); render(); };
+  $('accent').value = state.accent || '#2563eb';
+  $('accent').oninput = e => { state.accent = e.target.value; save(); render(); };
+}
+
+$('addExp').onclick = () => { state.exp.push({}); save(); renderEditors(); render(); };
+$('addEdu').onclick = () => { state.edu.push({}); save(); renderEditors(); render(); };
+$('download').onclick = () => window.print();
+$('reset').onclick = () => { if (!confirm('Clear everything?')) return; localStorage.removeItem(KEY); location.reload(); };
+$('loadSample').onclick = () => {
+  Object.assign(state, {
+    name:'Jane Doe', role:'Frontend Developer',
+    email:'jane@email.com', phone:'+91 90000 00000', loc:'Bengaluru, India',
+    web:'linkedin.com/in/janedoe',
+    summary:'Frontend developer with 4 years building fast, accessible web apps.',
+    skills:'JavaScript, React, TypeScript, CSS, Figma, Accessibility',
+    theme: state.theme, accent: state.accent,
+    exp:[{title:'Frontend Developer', org:'Acme Inc.', when:'2022 — Present',
+      bullets:'Rebuilt checkout, cutting load time 40%\nLed migration to React, shipping weekly'}],
+    edu:[{title:'B.Sc. Computer Science', org:'State University', when:'2016 — 2020'}]
+  });
+  save(); initUI();
+};
+
+function applyConfig(){
+  if (CONFIG.premiumUrl){
+    const b = $('premium'); b.style.display = '';
+    b.onclick = () => window.open(CONFIG.premiumUrl, '_blank');
+  }
+  if (CONFIG.affiliate && CONFIG.affiliate.length){
+    $('affiliateCard').style.display = '';
+    $('affiliateLinks').innerHTML = CONFIG.affiliate.map(a =>
+      `<a href="${a.url}" target="_blank" rel="noopener"
+         style="display:block;margin:6px 0;color:var(--accent)">→ ${esc(a.label)}</a>`).join('');
+  }
+}
+
+function initUI(){ bindBasics(); renderEditors(); render(); applyConfig(); }
+load(); initUI();
+</script>
+</body>
+</html>
