@@ -63,12 +63,45 @@
       </div>
     </div>
     <div class="step"><span class="n">2</span>
-      <div>Download your kit:
-        <a class="btn dl" href="job-application-kit.pdf" download>⬇ Download the Kit (PDF)</a>
+      <div>Enter your <strong>UPI Transaction ID</strong> (shown in your UPI app after paying —
+        also called UTR / Reference ID, a 12-digit number):
+        <input id="txn" placeholder="e.g. 415290837261" style="width:100%;padding:12px;margin:10px 0;
+          border:1px solid var(--line);border-radius:8px;font:inherit" inputmode="numeric">
+        <button class="btn" id="unlock" style="width:100%;border:0;cursor:pointer;font:inherit">Unlock my download</button>
+        <p class="note" id="txnmsg"></p>
       </div>
     </div>
-    <p class="note">We trust you 🤝 — this download works on the honour system. If the kit helps
-      you land interviews and you haven't paid yet, you can always come back and pay.</p>
+    <div class="step" id="dlstep" style="display:none"><span class="n">3</span>
+      <div>Download your kit:
+        <a class="btn dl" id="dlbtn" href="#" download>⬇ Download the Kit (PDF)</a>
+      </div>
+    </div>
+    <script>
+      (function(){
+        var FILE = 'files/jak-download-x7k2q.pdf';
+        var txn = document.getElementById('txn'), msg = document.getElementById('txnmsg');
+        function unlock(){
+          var v = (txn.value||'').replace(/\s/g,'');
+          if(!/^[A-Za-z0-9]{10,22}$/.test(v)){
+            msg.textContent = 'That does not look like a transaction ID — check your UPI app payment history and copy the 12-digit UTR/Reference number.';
+            msg.style.color = '#b91c1c';
+            return;
+          }
+          localStorage.setItem('jak-txn', v);
+          document.getElementById('dlbtn').href = FILE;
+          document.getElementById('dlstep').style.display = 'flex';
+          msg.textContent = 'Unlocked — thank you for your purchase! 🎉';
+          msg.style.color = '#16a34a';
+          document.getElementById('dlstep').scrollIntoView({behavior:'smooth'});
+        }
+        document.getElementById('unlock').addEventListener('click', unlock);
+        txn.addEventListener('keydown', function(e){ if(e.key==='Enter') unlock(); });
+        if(localStorage.getItem('jak-txn')){
+          document.getElementById('dlbtn').href = FILE;
+          document.getElementById('dlstep').style.display = 'flex';
+        }
+      })();
+    </script>
   </div>
 
   <div class="card">
